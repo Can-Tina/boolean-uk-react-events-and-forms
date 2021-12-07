@@ -1,30 +1,52 @@
 import { useState } from "react"
 
+import BookingForm from "./components/BookingForm"
+
 function BookingSection() {
+
+  const initialFormState = {
+    date: "",
+    pool: false, 
+    facial: false, 
+    massage: false,
+    newspaper: false, 
+    breakfast: false
+  };
+
+  const [formState, setFormState] = useState(initialFormState)
+
+  const handleChange = (event) => {
+    setFormState((previousForm) => ({
+      ...previousForm,
+      [event.target.name]: event.target.value
+    }));
+  };
+
+  const handleCheckboxChange = (event) => {
+    setFormState((previousForm) => ({
+      ...previousForm,
+      [event.target.name]: event.target.checked
+    }));
+  };
+
+  const submitForm = (event) => {
+    event.preventDefault()
+    const activities = [formState.pool, formState.facial, formState.massage]
+    const services = [formState.newspaper, formState.breakfast]
+    const date = formState.date
+    const bookingData = {
+      date,
+      activities,
+      services
+    }
+    console.log(bookingData)
+    setFormState(initialFormState)
+  }
+
   return (
     <section className="shadow pad-lg">
       <h2>Booking Form</h2>
-      <form className="form-stack">
-        <label htmlFor="date">When will you be arriving?</label>
-        <input type="datetime-local" />
-        <section>
-          <h3>Spa Activities</h3>
-          <input type="checkbox" id="pool" name="pool" />
-          <label htmlFor="pool">Soak and Swim</label>
-          <input type="checkbox" id="facial" name="facial" />
-          <label htmlFor="facial">Facial</label>
-          <input type="checkbox" id="massage" name="massage" />
-          <label htmlFor="massage">Massage</label>
-        </section>
-        <section>
-          <h3>Room Services</h3>
-          <input type="checkbox" id="newspaper" name="newspaper" />
-          <label htmlFor="newspaper">Daily Newspaper</label>
-          <input type="checkbox" id="breakfast" name="breakfast" />
-          <label htmlFor="breakfast">Breakfast</label>
-        </section>
-        <button type="submit">Book</button>
-      </form>
+      <BookingForm submitForm={submitForm} formState={formState} handleChange={handleChange} handleCheckboxChange={handleCheckboxChange}/>
     </section>
   )
 }
